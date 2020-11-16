@@ -523,7 +523,7 @@ print(convolution_forward_numpy([[0, 1, 0], [0, 1, 0], [0, 1, 0]], K_0))
 """Test your implementation on the two previous example and compare the results to the result manually computed."""
 
 #assert convolution_forward_numpy(I, K_0) == R_0
-# assert convolution_forward_numpy(I, K_1) == R_1
+#assert convolution_forward_numpy(I, K_1) == R_1
 
 """Display the result image of the convolution"""
 
@@ -552,8 +552,10 @@ Now let's use pytorch convolution layer to do the forward pass. Use the document
 """
 
 def convolution_forward_torch(image, kernel):
-    # YOUR CODE HERE 
-    NotImplemented
+    # YOUR CODE HERE
+    # use Conv2d
+    m = nn.Conv2d(1, 1, 3, stride=2)
+    return m
 
 """In pytorch you can also access other layer like convolution2D, pooling layers, for example in the following cell use the __torch.nn.MaxPool2d__ to redduce the image size."""
 
@@ -583,9 +585,6 @@ if __name__ == "__main__" :
 
 def display_10_images(dataset):
     # YOUR CODE HERE 
-    for num, (image, gt) in enumerate(dataset):
-        plot_one_tensor(image[0].squeeze().numpy())
-        plt
     plot_one_tensor(dataset[0])
 
 fmnist_train = FashionMNIST(os.getcwd(), train=True, download=True)
