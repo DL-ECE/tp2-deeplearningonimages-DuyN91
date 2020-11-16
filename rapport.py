@@ -184,18 +184,16 @@ def normalize_tensor(input_tensor: torch.Tensor) -> torch.Tensor:
 def sigmoid(input_tensor: torch.Tensor) -> torch.Tensor:
     """Apply a sigmoid to the input Tensor"""
     # YOUR CODE HERE
-    #M_sig = 1 / (1 + torch.exp(-input_tensor))
-    sig = nn.Sigmoid()
-    return sig(input_tensor)
+    M_sig = 1 / (1 + torch.exp(-input_tensor))
+    return M_sig
 
 def softmax(input_tensor: torch.Tensor)-> torch.Tensor:
     """Apply a softmax to the input tensor"""
     # YOUR CODE HERE 
-    #X_exp = torch.exp(input_tensor)
-    #X_sum = torch.sum(X_exp, axis=1).reshape(-1,1)
-    #M_softmax = X_exp / X_sum
-    soft = nn.Softmax(dim=1)
-    return soft(input_tensor)
+    X_exp = torch.exp(input_tensor)
+    X_sum = torch.sum(X_exp, axis=1).reshape(-1,1)
+    M_softmax = X_exp / X_sum
+    return M_softmax
 
 def target_to_one_hot(targets: torch.Tensor, num_classes=10) -> torch.Tensor:
     """Create the one hot representation of the target""" 
@@ -238,10 +236,10 @@ if __name__ == "__main__":
     X_test = torch.from_numpy(X_test.astype(np.float32))
 
     y_train = target_to_one_hot(y_train)
-    #y_train = torch.from_numpy(y_train).long()
+    y_train = torch.from_numpy(y_train).long()
 
     y_test = target_to_one_hot(y_test)
-    #y_test = torch.from_numpy(y_test).long()
+    y_test = torch.from_numpy(y_test).long()
 
 """Your remember the famous `class FFNN` from **TP1** ?? 
 
@@ -284,8 +282,8 @@ class FFNN(nn.Module):
 
         # We use the built-in function to compute the loss
         # TODO: Maybe try with another loss function ! 
-        self.loss_function = torch.nn.MSELoss()
-        # self.loss_function = torch.nn.CrossEntropyLoss()
+        #self.loss_function = torch.nn.MSELoss()
+        self.loss_function = torch.nn.CrossEntropyLoss()
 
         # We use the built-in function to update the model weights
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.learning_rate, momentum=self.momentum)
@@ -498,7 +496,7 @@ print(K_1)
 """What is the result of convolution of $ I_0 \ast K_0 $"""
 
 # put your answer here
-R_0 = np.array([[49, 113, 11], [237, 163, 119], [89, 178, 75]])
+R_0 = np.array([[0, 0, 0, 0, 0], [252, 49, 113, 11, 137], [18, 237, 163, 119, 53], [90, 89, 178, 75, 247], [209, 216, 48, 135, 232]])
 print(f"R_0 =")
 print(R_0)
 
@@ -506,7 +504,8 @@ print(R_0)
 
 # put your answer here
 #first 2 rows of the anwser
-R_1 = np.array([[252+49+113-237-90-89-178, 49+113+11-163-89-178-75, 113+11+137-119-178-75-247], [18+237+163-89-209-216-48, 237+163+119-178-216-48-135, 163+119+53-75-48-135-232]])
+#R_1 = np.array([[5*252-18-137], [252+49+113-237-90-89-178, 49+113+11-163-89-178-75, 113+11+137-119-178-75-247], [18+237+163-89-209-216-48, 237+163+119-178-216-48-135, 163+119+53-75-48-135-232]])
+R_1 = np.array([[5*252-18-237, 5*49-18-237-163, 5*113-237-163-119, 5*11-163-119-53, 5*137-119-53], [252+49+5*18-90-89, 252+49+113+5*237-90-89-178, 49+113+11+5*163-89-178-75, 113+11+137+5*119-178-75-247, 11+137+5*53-75-247]])
 print(f"R_1 =")
 print(R_1)
 
@@ -516,12 +515,14 @@ Now using the numpy implement the convolution operation.
 """
 
 def convolution_forward_numpy(image, kernel):
-    # YOUR CODE HERE 
-    NotImplemented
+    # YOUR CODE HERE
+    conv = image * kernel
+    return conv
+print(convolution_forward_numpy([[0, 1, 0], [0, 1, 0], [0, 1, 0]], K_0))
 
 """Test your implementation on the two previous example and compare the results to the result manually computed."""
 
-# assert convolution_forward_numpy(I, K_0) == R_0
+assert convolution_forward_numpy(I, K_0) == R_0
 # assert convolution_forward_numpy(I, K_1) == R_1
 
 """Display the result image of the convolution"""
@@ -582,10 +583,13 @@ if __name__ == "__main__" :
 
 def display_10_images(dataset):
     # YOUR CODE HERE 
+    for num, (image, gt) in enumerate(dataset):
+        plot_one_tensor(image[0].squeeze().numpy())
+        plt
     plot_one_tensor(dataset[0])
 
 fmnist_train = FashionMNIST(os.getcwd(), train=True, download=True)
-image, target = fmnist_train[0]
+image, target = fmnist_train[1]
 print(target)
 plot_one_tensor(image)
 print(type(image))
