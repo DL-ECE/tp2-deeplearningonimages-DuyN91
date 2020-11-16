@@ -184,22 +184,24 @@ def normalize_tensor(input_tensor: torch.Tensor) -> torch.Tensor:
 def sigmoid(input_tensor: torch.Tensor) -> torch.Tensor:
     """Apply a sigmoid to the input Tensor"""
     # YOUR CODE HERE
-    M_sig = 1 / (1 + torch.exp(-input_tensor))
-    return M_sig
+    #M_sig = 1 / (1 + torch.exp(-input_tensor))
+    sig = nn.Sigmoid()
+    return sig(input_tensor)
 
 def softmax(input_tensor: torch.Tensor)-> torch.Tensor:
     """Apply a softmax to the input tensor"""
     # YOUR CODE HERE 
-    X_exp = torch.exp(input_tensor)
-    X_sum = torch.sum(X_exp, axis=1).reshape(-1,1)
-    M_softmax = X_exp / X_sum
-    return M_softmax
+    #X_exp = torch.exp(input_tensor)
+    #X_sum = torch.sum(X_exp, axis=1).reshape(-1,1)
+    #M_softmax = X_exp / X_sum
+    soft = nn.Softmax(dim=1)
+    return soft(input_tensor)
 
 def target_to_one_hot(targets: torch.Tensor, num_classes=10) -> torch.Tensor:
     """Create the one hot representation of the target""" 
     # YOUR CODE HERE 
-    one_hot_matrix = np.zeros((targets.shape[0], 10))
-    for i in range (0, targets.shape[0]):
+    one_hot_matrix = torch.zeros((targets.shape[0], num_classes))
+    for i in range (targets.shape[0]):
         label = int(targets[i])
         one_hot_matrix[i, label] = 1
     return one_hot_matrix
@@ -236,10 +238,10 @@ if __name__ == "__main__":
     X_test = torch.from_numpy(X_test.astype(np.float32))
 
     y_train = target_to_one_hot(y_train)
-    y_train = torch.from_numpy(y_train).long()
+    #y_train = torch.from_numpy(y_train).long()
 
     y_test = target_to_one_hot(y_test)
-    y_test = torch.from_numpy(y_test).long()
+    #y_test = torch.from_numpy(y_test).long()
 
 """Your remember the famous `class FFNN` from **TP1** ?? 
 
